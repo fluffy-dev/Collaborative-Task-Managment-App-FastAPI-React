@@ -4,4 +4,4 @@ from fastapi import Depends
 
 from src.config.database.engine import database
 
-Session = Annotated[AsyncSession, Depends(database.get_session())]
+Session = Annotated[AsyncSession, Depends(database.get_session)]

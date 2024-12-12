@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     db_echo: bool = Field(False, alias="DB_ECHO")
 
     def get_db(self) -> str:
-        return f"{self.db_url_schema}:///{self.db_filename}"
+        return f"{self.db_url_scheme}:///{self.db_filename}"
 
 
 settings = Settings()

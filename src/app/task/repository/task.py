@@ -1,6 +1,6 @@
 from src.app.task.dto import TaskDTO
 from src.config.database.session import Session
-from src.app.task.models.Task import TaskModel
+from src.app.task.models.task import TaskModel
 from src.app.task.entity import TaskEntity
 
 from sqlalchemy import select, update, delete

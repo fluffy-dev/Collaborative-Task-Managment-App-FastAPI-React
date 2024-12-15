@@ -1,10 +1,11 @@
 from src.config.database.session import Session
 from src.app.user.models.user import UserModel
 from src.app.user.entity import UserEntity
-from src.app.user.dto import UserDTO
+from src.app.user.dto import UserDTO, LoginDTO, FindUserDTO
+from src.lib.exceptions import AlreadyExistError
 
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import select, update, delete, null
+from sqlalchemy import select, update, delete, Null
 
 class UserRepository:
 
@@ -17,7 +18,7 @@ class UserRepository:
         try:
             await self.session.commit()
         except IntegrityError:
-            print("USER ALREADY EXIST")
+            raise AlreadyExistError(f"{instance.email} is already exist")
 
         await self.session.refresh(instance)
         return self._get_dto(instance)
@@ -26,7 +27,13 @@ class UserRepository:
         stmt = select(UserModel).filter_by(id=pk)
         raw = await self.session.execute(stmt)
         result = raw.scalar_one_or_none()
-        return self._get_dto(result) if result else null
+        return self._get_dto(result) if result else Null
+
+    async def get_user(self, dto: FindUserDTO):
+        stmt = select(UserModel).filter_by(**dto.model_dump(exclude_none=True))
+        raw = await self.session.execute(stmt)
+        result = raw.scalar_one_or_none()
+        return self._get_dto(result) if result else Null
 
     async def get_list(self, limit: int):
         stmt = select(UserModel).limit(limit)

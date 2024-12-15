@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker, async_scoped_session
 )
 
-from src.config.settings import settings
+from src.config.database.settings import settings
 
 class Database:
 
@@ -46,6 +46,6 @@ class Database:
         finally:
             await session.close()
 
-
+#TODO
 # database = Database(settings.get_db(), settings.db_echo)
 database = Database("sqlite+aiosqlite:///Database.db", True)

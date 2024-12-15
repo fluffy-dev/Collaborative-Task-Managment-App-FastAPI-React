@@ -27,5 +27,3 @@ class AuthService:
         verify = UserEntity.verify(dto.password, user.password)
         if verify:
             return await self.token_service.get_token(dto)
-
-#TODO

@@ -2,10 +2,12 @@ from fastapi import APIRouter, Request, Response
 from typing import List
 
 from src.app.task.dependens.service import ITaskService
-from src.app.task.dto import TaskDTO
+from src.app.task.dto import TaskDTO, AddTaskDTO
+from src.app.user.dependens.service import IUserService
 
+from fastapi import Depends
 
-router = APIRouter(prefix="/task", tags=["task"])
+router = APIRouter(prefix="/task", tags=["task"], dependencies=[Depends(IUserService)])
 
 @router.get("/", response_model=List[TaskDTO])
 async def get_tasks_list(service: ITaskService, limit: int):
@@ -13,7 +15,7 @@ async def get_tasks_list(service: ITaskService, limit: int):
 
 
 @router.post("/add", response_model=TaskDTO)
-async def add_task(dto: TaskDTO, service: ITaskService):
+async def add_task(dto: AddTaskDTO, service: ITaskService):
     return await service.add(dto)
 
 @router.get("/{pk}", response_model=TaskDTO)

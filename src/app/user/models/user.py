@@ -4,7 +4,7 @@ from sqlalchemy import String
 
 class UserModel(Base):
 
-    __tablename__ = "User"
+    __tablename__ = "user"
 
-    email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
+    email: Mapped[str] = mapped_column(String(50), unique=True)
     password: Mapped[str]

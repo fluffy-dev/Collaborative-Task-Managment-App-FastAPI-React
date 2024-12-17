@@ -15,9 +15,10 @@ class AuthService:
         registration_data.pop('password2')
         user_entity = UserEntity(**registration_data)
         try:
-            return await self.user_service.add(user_entity, email_confirmation=True)
+            return await self.user_service.add(user_entity)
         except AlreadyExistError as e:
             raise RegistrationError(e)
+
 
     async def login(self, dto: LoginDTO):
         user = await self.user_service.get_user(dto)

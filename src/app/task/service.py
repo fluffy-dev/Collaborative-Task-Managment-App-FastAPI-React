@@ -1,5 +1,5 @@
 from src.app.task.dependens.repository import ITaskRepository
-from src.app.task.dto import TaskDTO
+from src.app.task.dto import TaskDTO, AddTaskDTO
 from src.app.task.entity import TaskEntity
 
 class TaskService:
@@ -37,7 +37,7 @@ class TaskService:
     async def get_list(self, limit: int):
         return await self.repository.get_list(limit)
 
-    async def add(self, dto: TaskDTO):
+    async def add(self, dto: AddTaskDTO):
         task_entity = TaskEntity(**dto.model_dump())
         return await self.repository.create(task_entity)
 

@@ -2,6 +2,7 @@ from src.app.task.dto import TaskDTO
 from src.config.database.session import Session
 from src.app.task.models.task import TaskModel
 from src.app.task.entity import TaskEntity
+from src.app.user.dto import UserDTO
 
 from sqlalchemy import select, update, delete
 
@@ -41,19 +42,19 @@ class TaskRepository:
         await self.session.refresh(instance)
         return self._get_dto(instance)
 
-    async def get(self, pk: int):
-        stmt = select(TaskModel).where(TaskModel.id == pk)
+    async def get(self, pk: int, user: UserDTO):
+        stmt = select(TaskModel).where(TaskModel.id == pk and TaskModel.user_id == user.id)
         raw = await self.session.execute(stmt)
         result = raw.scalar_one_or_none()
         return self._get_dto(result) if result else None
 
-    async def get_list(self, limit:int):
-        stmt = select(TaskModel).limit(limit)
+    async def get_list(self, limit:int, user: UserDTO):
+        stmt = select(TaskModel).filter_by(user_id=user.id).limit(limit)
         raw = await self.session.execute(stmt)
         tasks_list = [self._get_dto(task).__dict__ for task in raw.scalars().all()]
         return tasks_list
 
-    async def update(self, dto: TaskDTO, pk:int):
+    async def update(self, dto: TaskDTO, pk:int, user: UserDTO):
         dto.id = pk
         stmt = update(TaskModel).values(**dto.model_dump()).filter_by(id=pk).returning(TaskModel)
         raw = await self.session.execute(stmt)
@@ -61,8 +62,8 @@ class TaskRepository:
         result = raw.scalar_one()
         return self._get_dto(result)
 
-    async def delete(self, pk:int):
-        stmt = delete(TaskModel).where(TaskModel.id == pk)
+    async def delete(self, pk:int, user: UserDTO):
+        stmt = delete(TaskModel).where(TaskModel.id == pk and TaskModel.user_id == user.id)
         await self.session.execute(stmt)
         await self.session.commit()
 

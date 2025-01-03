@@ -9,7 +9,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/registration", response_model=UserDTO)
-async def registration(dto: RegistrationDTO, service: IAuthService, request: Request):
+async def registration(dto: RegistrationDTO, service: IAuthService):
     """
     controller for registration user
     """
@@ -21,6 +21,9 @@ async def registration(dto: RegistrationDTO, service: IAuthService, request: Req
 
 @router.post("/login")
 async def login(response: Response, dto: LoginDTO, service: IAuthService):
+    """
+    controller for login user
+    """
     try:
         tokens = await service.login(dto)
         response.set_cookie(

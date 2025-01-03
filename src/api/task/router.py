@@ -1,21 +1,19 @@
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter
 from typing import List
 
 from src.app.task.dependens.service import ITaskService
 from src.app.task.dto import TaskDTO, AddTaskDTO
-from src.app.user.dependens.service import IUserService
+from src.api.user.depends import IUser
 
-from fastapi import Depends
-
-router = APIRouter(prefix="/task", tags=["task"], dependencies=[Depends(IUserService)])
+router = APIRouter(prefix="/task", tags=["task"])
 
 @router.get("/", response_model=List[TaskDTO])
-async def get_tasks_list(service: ITaskService, limit: int):
-    return await service.get_list(limit)
+async def get_tasks_list(service: ITaskService, limit: int, user:IUser):
+    return await service.get_list(limit, user)
 
 
 @router.post("/add", response_model=TaskDTO)
-async def add_task(dto: AddTaskDTO, service: ITaskService):
+async def add_task(dto: AddTaskDTO, service: ITaskService,  user:IUser):
     return await service.add(dto)
 
 @router.get("/{pk}", response_model=TaskDTO)
@@ -26,6 +24,6 @@ async def get_task(service: ITaskService, pk: int):
 async def edit_task(service: ITaskService, dto: TaskDTO, pk: int):
     return await service.edit(dto, pk)
 
-@router.delete("/{id}")
+@router.delete("/{pk}")
 async def delete_task(service: ITaskService, pk: int):
     return await service.remove(pk)

@@ -4,16 +4,7 @@ from src.app.user.entity import UserEntity
 from src.app.auth.dependens.token_service import ITokenService
 
 from fastapi import HTTPException, status
-from fastapi.security import SecurityScopes
 
-"""
-async def get_current_user(
-    security_scopes: SecurityScopes,
-    token: Annotated[str, Depends(oauth2_scheme)],
-    db: Session = Depends(get_db)
-) -> schemas.User:
-
-"""
 class UserService:
     def __init__(self, repository: IUserRepository, token_service: ITokenService):
         self.repository = repository
@@ -28,9 +19,9 @@ class UserService:
         if not user_email:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
-        return await self.repository.get_user(FindUserDTO(email=data["user"]["email"]))
+        return await self.get_user(FindUserDTO(email=data["user"]["email"]))
 
-    async def get_user(self, dto):
+    async def get_user(self, dto) -> UserDTO:
         user = await self.repository.get_user(FindUserDTO(email=dto.email))
         return user
 

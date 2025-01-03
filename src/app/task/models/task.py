@@ -11,4 +11,4 @@ class TaskModel(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey(
         "user.id",
         ondelete="CASCADE",
-    ), primary_key=True)
+    ), nullable=False)

@@ -27,13 +27,13 @@ class UserRepository:
         stmt = select(UserModel).filter_by(id=pk)
         raw = await self.session.execute(stmt)
         result = raw.scalar_one_or_none()
-        return self._get_dto(result) if result else Null
+        return self._get_dto(result) if result else None
 
     async def get_user(self, dto: FindUserDTO):
         stmt = select(UserModel).filter_by(**dto.model_dump(exclude_none=True))
         raw = await self.session.execute(stmt)
         result = raw.scalar_one_or_none()
-        return self._get_dto(result) if result else Null
+        return self._get_dto(result) if result else None
 
     async def get_list(self, limit: int):
         stmt = select(UserModel).limit(limit)

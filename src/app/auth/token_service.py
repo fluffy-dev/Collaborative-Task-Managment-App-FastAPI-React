@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+import time
 
 from jwt import encode, decode, get_unverified_header, PyJWTError, ExpiredSignatureError, InvalidSignatureError
 
@@ -18,12 +18,11 @@ class TokenService:
         return TokenDTO(access_token=access_token, token_type=token_type)
 
     async def generate_token(self, dto):
-        expire = datetime.now() + timedelta(seconds=self.access_token_lifetime)
+        expire = int(time.time())+self.access_token_lifetime
         payload = {
             "token_type": "access",
             "user": {"email": str(dto.email)},
-            # "exp": str(expire),
-            # "iat": datetime.now(),
+            "exp": expire,
         }
         return await self.encode_token(payload=payload)
 

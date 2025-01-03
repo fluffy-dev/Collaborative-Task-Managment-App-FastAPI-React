@@ -31,18 +31,18 @@ class TaskService:
     def __init__(self, repository: ITaskRepository):
         self.repository = repository
 
-    async def get(self, pk):
+    async def get(self, pk, user):
         return await self.repository.get(pk)
 
-    async def get_list(self, limit: int):
-        return await self.repository.get_list(limit)
+    async def get_list(self, limit: int, user):
+        return await self.repository.get_list(limit, user)
 
-    async def add(self, dto: AddTaskDTO):
+    async def add(self, dto: AddTaskDTO, user):
         task_entity = TaskEntity(**dto.model_dump())
         return await self.repository.create(task_entity)
 
-    async def edit(self, dto: TaskDTO, pk: int):
+    async def edit(self, dto: TaskDTO, pk: int, user):
         return await self.repository.update(dto, pk)
 
-    async def remove(self, pk: int):
+    async def remove(self, pk: int, user):
         return await self.repository.delete(pk)
